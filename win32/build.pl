@@ -21,10 +21,10 @@ if ($target_arch ne "x86" && $target_arch ne "x64") {
 my @perl_arch = split(/-/, $Config{archname});
 my $openssl = false;
 my $default_openssldir = $target_arch eq "x64" ?
-    "C:\\Progra~1\\OpenSSL-Win64" : "C:\\Progra~1\\OpenSSL-Win32";
+    "C:\\OpenSSL-Win64" : "C:\\OpenSSL-Win32";
 my $default_opensslincdir = $default_openssldir . "\\include";
 my $opensslincdir = $default_opensslincdir;
-my $default_openssllibdir = $default_openssldir . "\\lib\\VC";
+my $default_openssllibdir = $default_openssldir . "\\lib\\VC\\x64";
 my $openssllibdir = $default_openssllibdir;
 my $b_ipv6 = false;
 my $b_winextdll = false;
@@ -146,6 +146,12 @@ while (1) {
 if ($perl && $perl_arch[1] ne $target_arch) {
     print "perl_arch = $perl_arch[1] does not match target_arch = $target_arch\n";
     die;
+}
+
+if ($link_dynamic) {
+  $openssllibdir .= "\\MD";
+} else {
+  $openssllibdir .= "\\MT";
 }
 
 my $linktype = $link_dynamic ? "dynamic" : "static";
